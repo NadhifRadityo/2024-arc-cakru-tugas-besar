@@ -1,0 +1,19 @@
+{
+  "name": "2024-arc-cakru-tugas-besar",
+  "version": "1.0.0",
+  "description": "RTSP relay for CCTV browser view",
+  "main": "index.mjs",
+  "scripts": {
+    "start": "node index.mjs"
+  },
+  "keywords": [
+    "cctv",
+    "rtsp",
+    "relay"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
