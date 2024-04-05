@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>RTSP Live Viewer</title>
+		<meta name="description" content="A tools to live view RTSP source directly in browser.">
+		<meta name="color-scheme" content="light">
+		<meta property="og:title" content="RTSP Live Viewer">
+		<meta property="og:description" content="A tools to live view RTSP source directly in browser.">
+		<link href="/root.css" rel="stylesheet" />
+		<link href="/viewer-frame.css" rel="stylesheet" />
+		<script src="/viewer-frame.js"></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			const link = "<%=link%>";
+			const url = `${location.protocol == "https:" ? "wss:" : "ws:"}//${location.host}/stream/${link}`;
+			const canvas = window.canvas = document.createElement("canvas");
+			document.body.appendChild(canvas);
+			canvas.id = "canvas";
+
+			const control = window.control = document.createElement("div");
+			document.body.appendChild(control);
+			control.classList.add("control");
+
+			const importJSMpegPromise = importJSMpeg().then(JSMpeg => {
+				// Patch: JSMpeg only supports Mpeg Audio Version 2
+				// But the source code compare it to Mpeg Audio Version 1.
+				// This patch is forcing to use javascript decoder, since
+				// we can edit the constant from there.
+				JSMpeg.Decoder.MP2Audio.VERSION.MPEG_1 = 2;
+				JSMpeg.Decoder.MP2AudioWASM = JSMpeg.Decoder.MP2Audio;
+				return JSMpeg;
+			});
+			canvas.addEventListener("click", () => {
+				if(!window.player || window.player instanceof Promise)
+					return;
+				if(canvas.classList.contains("playing")) {
+					canvas.classList.remove("playing");
+					window.player.pause();
+				} else {
+					canvas.classList.add("playing");
+					window.player.play();
+				}
+			});
+			async function startStream(link) {
+				const JSMpeg = await importJSMpegPromise;
+				window.player = loadMpegTsPlayer({
+					url: `${location.protocol == "https:" ? "wss:" : "ws:"}//${location.host}${link}`,
+					canvas: canvas,
+					mpegOptions: {
+						videoBufferSize: 1024 * 1024,
+						audioBufferSize: 256 * 1024
+					}
+				}).then(player => {
+					window.player = player;
+					canvas.classList.add("playing");
+				});
+			}
+			const websocket = window.websocket = new WebSocket(url);
+			websocket.addEventListener("message", e => {
+				const data = JSON.parse(e.data);
+				if(data.type == "ready") {
+					const { link } = data;
+					console.log(`Ready! Upstream link: ${link}`);
+					startStream(link);
+				}
+				if(data.type == "log") {
+					const { content } = data;
+					console.log(content);
+				}
+			});
+
+			window.updateSize = function updateSize() {
+				if(!canvas.hasAttribute("width") || !canvas.hasAttribute("height")) return;
+				const canvasAspect = parseInt(canvas.getAttribute("width")) / parseInt(canvas.getAttribute("height"));
+				const windowAspect = window.innerWidth / window.innerHeight;
+				const targetSize = { width: 0, height: 0 };
+				if(canvasAspect >= windowAspect) {
+					targetSize.width = window.innerWidth;
+					targetSize.height = 1 / canvasAspect * window.innerWidth;
+				} else {
+					targetSize.width = canvasAspect * window.innerHeight;
+					targetSize.height = window.innerHeight;
+				}
+				canvas.style.width = `${targetSize.width}px`;
+				canvas.style.height = `${targetSize.height}px`;
+			}
+			const observer = new MutationObserver(mutations => {
+				if(!mutations.some(m => m.type == "attributes") || !mutations.some(m => m.attributeName != "class")) return;
+				observer.disconnect();
+				window.updateSize();
+			});
+			observer.observe(canvas, { attributes: true });
+			window.updateSize();
+			window.addEventListener("resize", () => window.updateSize());
+			setInterval(() => window.updateSize(), 1000);
+		</script>
+	</body>
+</html>
