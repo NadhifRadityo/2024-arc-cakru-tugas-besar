@@ -10,17 +10,17 @@ body {
   .container {
     width: 100%;
     display: flex;
-    justify-content: center; /* Center horizontally */
+    justify-content: center;
     padding: 20px;
   }
   
   .left-section, .right-section {
-    width: 50%; /* Each section takes 50% of the container */
-    height: 100vh; /* Adjust height as needed */
+    width: 50%;
+    height: 100vh;
   }
   
   .left-section {
-    position: relative; /* Required for absolute positioning */
+    position: relative;
     width: 50%;
     height: 100vh;
     background-color: #e0e0e0;
@@ -32,9 +32,9 @@ body {
   .right-section {
     background-color: #ffffff;
     display: flex;
-    flex-direction: column; /* Ensure elements stack vertically */
-    justify-content: center; /* Center content vertically */
-    align-items: center; /* Center content horizontally */
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   
   .title {
@@ -56,7 +56,7 @@ body {
     position: absolute;
     bottom: 0;
     left: 0;
-    padding: 10px; /* Adjust padding as needed */
+    padding: 10px;
   }
   
   .input-group {
@@ -85,10 +85,10 @@ body {
   }
   
   .grey-text {
-    color: #666; /* Grey color */
+    color: #666;
   }
   
   .grey-text_2 {
-    color: #a5a5a5; /* Grey color */
+    color: #a5a5a5;
     font-size: 13px;
   }
