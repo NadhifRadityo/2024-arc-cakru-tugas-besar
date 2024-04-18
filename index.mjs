@@ -119,8 +119,13 @@ function addMpegTsStream(ws, link) {
 		d = filterLogMessages(d);
 		ws.send(JSON.stringify({ type: "log", content: d }));
 	};
+	const exitCallback = () => ws.close();
 	stream.on("progress", progressCallback);
-	ws.on("close", () => stream.off("progress", progressCallback));
+	stream.on("exit", exitCallback);
+	ws.on("close", () => {
+		stream.off("progress", progressCallback);
+		stream.off("exit", exitCallback);
+	});
 }
 function removeMpegTsStream(ws) {
 	const streamIndex = mpegTsStreams.findIndex(([_, c]) => c.includes(ws));

@@ -12,6 +12,25 @@
 		<link href="/main.css" rel="stylesheet" />
 	</head>
 	<body class="container">
+    <script type="text/javascript">
+      function onReady(callback) {
+				if(document.readyState == "complete" || (document.readyState != "loading" && !document.documentElement.doScroll))
+					setTimeout(callback);
+				else
+					document.addEventListener("DOMContentLoaded", callback);
+			}
+      onReady(() => {
+        const inputText = document.querySelector(".input-text");
+        const inputButton = document.querySelector(".input-button");
+        inputButton.addEventListener("click", e => {
+          const text = inputText.value;
+          const url = (() => { try { return new URL(text); } catch(_) { return null; } })();
+          if(url == null) return;
+          if(url.protocol != "rtsp:") return;
+          document.location.pathname = `/viewer/${url.href}`;
+        });
+      });
+    </script>
     <div class="left-section">
       <div class="title">RTSP Live Viewer</div>
       <div class="footer">Tugas Besar Cakru ARC 2024</div>
@@ -23,16 +42,5 @@
       <button class="input-button">View</button>
       <p class="disclaimer">By using this service you consent to the use of cookies and user agreements.</p>
     </div>
-    <script>
-      const inputText = document.querySelector(".input-text");
-      const inputButton = document.querySelector(".input-button");
-      inputButton.addEventListener("click", e => {
-        const text = inputText.value;
-        const url = (() => { try { return new URL(text); } catch(_) { return null; } })();
-        if(url == null) return;
-        if(url.protocol != "rtsp:") return;
-        document.location.pathname = `/viewer/${url.href}`;
-      });
-    </script>
 	</body>
 </html>

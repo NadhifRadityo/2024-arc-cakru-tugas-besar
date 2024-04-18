@@ -14,11 +14,57 @@
 	</head>
 	<body>
 		<script type="text/javascript">
+			const managementPorts = [];
+			window.addEventListener("message", e => {
+				for(const port of e.ports)
+					port.start();
+				managementPorts.push(...e.ports);
+				emitResize(null, null, e.ports);
+				emitMetadata(null, e.ports);
+				emitBlur(null, e.ports);
+			});
+			let lastResizeWidth;
+			let lastResizeHeight;
+			function emitResize(width, height, ports = managementPorts) {
+				if(width == null) width = lastResizeWidth;
+				if(height == null) height = lastResizeHeight;
+				if(!(ports instanceof Array)) ports = [ports];
+				lastResizeWidth = width;
+				lastResizeHeight = height;
+				if(width == null || height == null) return;
+				for(const port of ports)
+					port.postMessage({ event: "resize", width: width, height: height });
+			}
+			let lastMetadataTitle;
+			function emitMetadata(title, ports = managementPorts) {
+				if(title == null) title = lastMetadataTitle;
+				if(!(ports instanceof Array)) ports = [ports];
+				lastMetadataTitle = title;
+				if(title == null) return;
+				for(const port of ports)
+					port.postMessage({ event: "metadata", title: title });
+			}
+			let lastBlurImage;
+			function emitBlur(image, ports = managementPorts) {
+				if(image == null) image = lastBlurImage;
+				if(!(ports instanceof Array)) ports = [ports];
+				lastBlurImage = image;
+				if(image == null) return;
+				for(const port of ports)
+					port.postMessage({ event: "blur", image: image });
+			}
+			
 			const link = "<%=link%>";
 			const url = `${location.protocol == "https:" ? "wss:" : "ws:"}//${location.host}/stream/${link}`;
 			const canvas = window.canvas = document.createElement("canvas");
 			document.body.appendChild(canvas);
 			canvas.id = "canvas";
+
+			const miniCanvas = document.createElement("canvas");
+			const miniCanvasContext = miniCanvas.getContext("2d");
+			const miniCanvasSize = 64;
+			miniCanvas.width = miniCanvasSize;
+			miniCanvas.height = miniCanvasSize;
 
 			const control = window.control = document.createElement("div");
 			document.body.appendChild(control);
@@ -51,7 +97,23 @@
 					canvas: canvas,
 					mpegOptions: {
 						videoBufferSize: 1024 * 1024,
-						audioBufferSize: 256 * 1024
+						audioBufferSize: 256 * 1024,
+						onVideoDecode: () => {
+							const canvasWidth = parseInt(canvas.getAttribute("width"));
+							const canvasHeight = parseInt(canvas.getAttribute("height"))
+							const canvasAspect = canvasWidth / canvasHeight;
+							const targetSize = { width: 0, height: 0 };
+							if(canvasAspect >= 1) {
+								targetSize.width = miniCanvasSize;
+								targetSize.height = 1 / canvasAspect * miniCanvasSize;
+							} else {
+								targetSize.width = canvasAspect * miniCanvasSize;
+								targetSize.height = miniCanvasSize;
+							}
+							miniCanvasContext.drawImage(canvas, 0, 0, canvasWidth, canvasHeight, (miniCanvasSize - targetSize.width) / 2, (miniCanvasSize - targetSize.height) / 2, targetSize.width, targetSize.height);
+							const imageData = miniCanvasContext.getImageData(0, 0, miniCanvasSize, miniCanvasSize);
+							emitBlur(imageData);
+						}
 					}
 				}).then(player => {
 					window.player = player;
@@ -69,6 +131,8 @@
 				if(data.type == "log") {
 					const { content } = data;
 					console.log(content);
+					const matches = [...content.matchAll(/^\s*Input.*$.*^\s*Metadata:.*$.*^\s*title\s*:\s*([^\r\n]*)$/gsm)];
+					if(matches.length > 0) emitMetadata(matches[0][1]);
 				}
 			});
 
@@ -86,6 +150,7 @@
 				}
 				canvas.style.width = `${targetSize.width}px`;
 				canvas.style.height = `${targetSize.height}px`;
+				emitResize(targetSize.width, targetSize.height);
 			}
 			const observer = new MutationObserver(mutations => {
 				if(!mutations.some(m => m.type == "attributes") || !mutations.some(m => m.attributeName != "class")) return;
