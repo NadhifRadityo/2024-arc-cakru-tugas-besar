@@ -11,21 +11,28 @@
 		<link href="/root.css" rel="stylesheet" />
 		<link href="/main.css" rel="stylesheet" />
 	</head>
-	<body>
-    <div class="container">
-      <div class="left-section">
-        <div class="title">RTSP Live Viewer</div>
-        <div class="footer">Tugas Besar Cakru ARC 2024</div>
-      </div>
-      <div class="right-section">
-        <div class="title_2">View an RTSP Source</div>
-        <p class="grey-text">Enter your RTSP link below to live view it directly in this browser.</p>
-        <div class="input-group">
-          <input type="text" placeholder="rtsp://203.124.12.45/Camera1">
-          <button>View</button>
-          <p class="grey-text_2">By using this service you consent to the use of cookies and user agreements.</p>
-        </div>
-      </div>
+	<body class="container">
+    <div class="left-section">
+      <div class="title">RTSP Live Viewer</div>
+      <div class="footer">Tugas Besar Cakru ARC 2024</div>
     </div>
+    <div class="right-section">
+      <div class="title">View an RTSP Source</div>
+      <p class="subtitle">Enter your RTSP link below to live view it directly in this browser.</p>
+      <input class="input-text" type="text" placeholder="rtsp://203.124.12.45/Camera1">
+      <button class="input-button">View</button>
+      <p class="disclaimer">By using this service you consent to the use of cookies and user agreements.</p>
+    </div>
+    <script>
+      const inputText = document.querySelector(".input-text");
+      const inputButton = document.querySelector(".input-button");
+      inputButton.addEventListener("click", e => {
+        const text = inputText.value;
+        const url = (() => { try { return new URL(text); } catch(_) { return null; } })();
+        if(url == null) return;
+        if(url.protocol != "rtsp:") return;
+        document.location.pathname = `/viewer/${url.href}`;
+      });
+    </script>
 	</body>
 </html>
