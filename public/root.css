@@ -1,6 +1,127 @@
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 100;
+	src: url("/fonts/TTCommons/TTCommons-Thin.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-Thin.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 200;
+	src: url("/fonts/TTCommons/TTCommons-ExtraLight.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-ExtraLight.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 300;
+	src: url("/fonts/TTCommons/TTCommons-Light.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-Light.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 400;
+	src: url("/fonts/TTCommons/TTCommons-Regular.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-Regular.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 500;
+	src: url("/fonts/TTCommons/TTCommons-Medium.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-Medium.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 600;
+	src: url("/fonts/TTCommons/TTCommons-DemiBold.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-DemiBold.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 700;
+	src: url("/fonts/TTCommons/TTCommons-Bold.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-Bold.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 800;
+	src: url("/fonts/TTCommons/TTCommons-ExtraBold.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-ExtraBold.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 900;
+	src: url("/fonts/TTCommons/TTCommons-Black.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-Black.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 100;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-ThinItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-ThinItalic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 200;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-ExtraLightItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-ExtraLightItalic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 300;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-LightItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-LightItalic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 400;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-Italic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-Italic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 500;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-MediumItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-MediumItalic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 600;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-DemiBoldItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-DemiBoldItalic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 700;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-BoldItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-BoldItalic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 800;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-ExtraBoldItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-ExtraBoldItalic.woff2") format("woff2");
+}
+@font-face {
+	font-family: "ElEmEfAeOh";
+	font-weight: 900;
+	font-style: oblique;
+	src: url("/fonts/TTCommons/TTCommons-BlackItalic.woff") format("woff"), 
+		 url("/fonts/TTCommons/TTCommons-BlackItalic.woff2") format("woff2");
+}
+
+
 html, head, body {
 	margin: 0;
 	padding: 0;
+  font-family: "ElEmEfAeOh";
 }
 
 *, *::before, *::after {
@@ -95,6 +216,7 @@ video {
 *,
 ::before,
 ::after {
+  box-sizing: border-box;
   border-width: 0;
   border-style: solid;
 }
